@@ -24,6 +24,7 @@ const sb = SUPABASE_URL && SUPABASE_SERVICE_KEY
 const app = express();
 app.set('trust proxy', 1);
 app.disable('x-powered-by');
+app.get('/health', (q, r) => r.status(200).send('ok'));
 // Redirection HTTPS (Render termine TLS en amont et transmet X-Forwarded-Proto)
 app.use((q, r, n) => (q.secure || q.hostname === 'localhost') ? n() : r.redirect(301, `https://${q.hostname}${q.originalUrl}`));
 app.use(helmet({
