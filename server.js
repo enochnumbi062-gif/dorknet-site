@@ -77,7 +77,10 @@ N'invente aucune fonctionnalité, certification ou client. Si tu ne sais pas, di
 /* ---------- Gemini (avec fallback multi-modèles) ---------- */
 async function askGemini(contents) {
   let last = 'aucun modèle essayé';
-  for (const model of MODELS) {
+  for (const rawModel of MODELS) {
+    // S'assure que le nom du modèle est propre et préfixé correctement si nécessaire, 
+    // ou nettoyé pour correspondre à l'attente de l'API v1beta (ex: 'gemini-2.5-flash')
+    const model = rawModel.replace(/^models\//, '');
     const g = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'x-goog-api-key': GEMINI_API_KEY },
@@ -90,11 +93,14 @@ async function askGemini(contents) {
     });
     const j = await g.json().catch(() => ({}));
     const t = (j.candidates?.[0]?.content?.parts ?? []).map(p => p.text ?? '').join('').trim();
-    if (!g.ok || !t) { console.error('Gemini', g.status, JSON.stringify(j).slice(0, 300)); throw new Error('gemini'); }
-    if (g.ok && t) return t;
-    last = `${model} → HTTP ${g.status} ${j.error?.message ?? j.candidates?.[0]?.finishReason ?? ''}`.trim();
-    console.error('[gemini]', last);
-    if (g.status !== 404) break;
+    
+    if (!g.ok || !t) { 
+      console.error('Gemini', g.status, JSON.stringify(j).slice(0, 300)); 
+      last = `${model} → HTTP ${g.status} ${j.error?.message ?? j.candidates?.[0]?.finishReason ?? ''}`.trim();
+      if (g.status !== 404) break;
+      continue;
+    }
+    return t;
   }
   throw new Error(last);
 }
@@ -116,8 +122,8 @@ app.post('/api/chat', lim(1, 12), async (q, r) => {
   try {
     const reply = await askGemini([...hist, { role: 'user', parts: [{ text: m }] }]);
     r.json({ reply: reply.slice(0, 1500) });
-  } catch (e) { console.error('chat', e.message);
-    console.error('[chat]', e.message);
+  } catch (e) { 
+    console.error('chat', e.message);
     r.status(502).json({ error: 'Assistante momentanément indisponible.' });
   }
 });
