@@ -18,7 +18,7 @@ const TELEGRAM_BOT_TOKEN = env('TELEGRAM_BOT_TOKEN');
 const TELEGRAM_CHAT_ID = env('TELEGRAM_CHAT_ID');
 
 // Modèles alternatifs en cas de 404 (fallback automatique)
-const MODELS = [...new Set([GEMINI_MODEL, 'gemini-flash-latest', 'gemini-2.5-flash'])];
+const MODELS = [...new Set([GEMINI_MODEL, 'gemini-flash-latest', 'gemini-2.5-flash', 'gemini-3.5-flash', 'gemini-3.1-flash-lite'])];
 
 for (const [k, v] of Object.entries({ GEMINI_API_KEY, SUPABASE_URL, SUPABASE_ANON_KEY, SUPABASE_SERVICE_KEY, TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID })) {
   if (!v) console.warn(`[config] Variable manquante : ${k}`);
@@ -90,6 +90,7 @@ async function askGemini(contents) {
     });
     const j = await g.json().catch(() => ({}));
     const t = (j.candidates?.[0]?.content?.parts ?? []).map(p => p.text ?? '').join('').trim();
+    if (!g.ok || !t) { console.error('Gemini', g.status, JSON.stringify(j).slice(0, 300)); throw new Error('gemini'); }
     if (g.ok && t) return t;
     last = `${model} → HTTP ${g.status} ${j.error?.message ?? j.candidates?.[0]?.finishReason ?? ''}`.trim();
     console.error('[gemini]', last);
@@ -115,7 +116,7 @@ app.post('/api/chat', lim(1, 12), async (q, r) => {
   try {
     const reply = await askGemini([...hist, { role: 'user', parts: [{ text: m }] }]);
     r.json({ reply: reply.slice(0, 1500) });
-  } catch (e) {
+  } catch (e) { console.error('chat', e.message);
     console.error('[chat]', e.message);
     r.status(502).json({ error: 'Assistante momentanément indisponible.' });
   }
