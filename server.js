@@ -13,12 +13,18 @@ const SUPABASE_URL = env('SUPABASE_URL').replace(/\/+$/, '');
 const SUPABASE_ANON_KEY = env('SUPABASE_ANON_KEY');
 const SUPABASE_SERVICE_KEY = env('SUPABASE_SERVICE_KEY');
 const GEMINI_API_KEY = env('GEMINI_API_KEY');
-const GEMINI_MODEL = env('GEMINI_MODEL', 'gemini-2.5-flash');
+const GEMINI_MODEL_RAW = env('GEMINI_MODEL', 'gemini-2.5-flash');
 const TELEGRAM_BOT_TOKEN = env('TELEGRAM_BOT_TOKEN');
 const TELEGRAM_CHAT_ID = env('TELEGRAM_CHAT_ID');
 
+// Découpage propre de GEMINI_MODEL au cas où elle contienne plusieurs modèles séparés par une virgule
+const parsedModels = GEMINI_MODEL_RAW
+  .split(',')
+  .map(m => m.trim().replace(/^models\//, ''))
+  .filter(Boolean);
+
 // Modèles alternatifs en cas de 404 (fallback automatique)
-const MODELS = [...new Set([GEMINI_MODEL, 'gemini-flash-latest', 'gemini-2.5-flash', 'gemini-3.5-flash', 'gemini-3.1-flash-lite'])];
+const MODELS = [...new Set([...parsedModels, 'gemini-2.5-flash', 'gemini-1.5-flash', 'gemini-flash-latest'])];
 
 for (const [k, v] of Object.entries({ GEMINI_API_KEY, SUPABASE_URL, SUPABASE_ANON_KEY, SUPABASE_SERVICE_KEY, TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID })) {
   if (!v) console.warn(`[config] Variable manquante : ${k}`);
@@ -77,10 +83,7 @@ N'invente aucune fonctionnalité, certification ou client. Si tu ne sais pas, di
 /* ---------- Gemini (avec fallback multi-modèles) ---------- */
 async function askGemini(contents) {
   let last = 'aucun modèle essayé';
-  for (const rawModel of MODELS) {
-    // S'assure que le nom du modèle est propre et préfixé correctement si nécessaire, 
-    // ou nettoyé pour correspondre à l'attente de l'API v1beta (ex: 'gemini-2.5-flash')
-    const model = rawModel.replace(/^models\//, '');
+  for (const model of MODELS) {
     const g = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'x-goog-api-key': GEMINI_API_KEY },
@@ -91,16 +94,17 @@ async function askGemini(contents) {
       }),
       signal: AbortSignal.timeout(20000)
     });
+    
     const j = await g.json().catch(() => ({}));
     const t = (j.candidates?.[0]?.content?.parts ?? []).map(p => p.text ?? '').join('').trim();
     
-    if (!g.ok || !t) { 
-      console.error('Gemini', g.status, JSON.stringify(j).slice(0, 300)); 
-      last = `${model} → HTTP ${g.status} ${j.error?.message ?? j.candidates?.[0]?.finishReason ?? ''}`.trim();
-      if (g.status !== 404) break;
-      continue;
-    }
-    return t;
+    if (g.ok && t) return t;
+
+    last = `${model} → HTTP ${g.status} ${j.error?.message ?? j.candidates?.[0]?.finishReason ?? ''}`.trim();
+    console.error('Gemini', g.status, JSON.stringify(j).slice(0, 300));
+    
+    // Si l'erreur est un 404 (modèle non trouvé), on teste le modèle suivant dans le tableau
+    if (g.status !== 404 && g.status !== 400) break;
   }
   throw new Error(last);
 }
@@ -122,7 +126,7 @@ app.post('/api/chat', lim(1, 12), async (q, r) => {
   try {
     const reply = await askGemini([...hist, { role: 'user', parts: [{ text: m }] }]);
     r.json({ reply: reply.slice(0, 1500) });
-  } catch (e) { 
+  } catch (e) {
     console.error('chat', e.message);
     r.status(502).json({ error: 'Assistante momentanément indisponible.' });
   }
