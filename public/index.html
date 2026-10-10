@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>DorkNet — Dr. Enoch Numbi, écosystème AGATA</title>
+<meta name="description" content="DorkNet : cyberdéfense, OSINT, forensique, analyse topologique et IA. Tous les systèmes sont fournis sur devis. Fondateur : Dr. Enoch Numbi.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;700&family=IBM+Plex+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#060a11;--ink:#e9eef6;--mut:#8f9db3;--cu:#c8803c;--ln:rgba(255,255,255,.1);--c:#ffb454;--hd:'Chakra Petch',system-ui,sans-serif;--bd:'IBM Plex Sans',system-ui,sans-serif}
+*{box-sizing:border-box;margin:0}
+html{color-scheme:dark}
+html,body{height:100%;background:radial-gradient(ellipse at 50% 40%,#0c1626,#060a11 70%);color:var(--ink);font:400 15px/1.5 var(--bd);overflow:hidden;-webkit-tap-highlight-color:transparent}
+canvas.w3{position:fixed;inset:0;width:100%;height:100%;display:block;touch-action:none;z-index:0}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer;background:none;border:0}
+:focus-visible{outline:2px solid var(--c);outline-offset:2px}
+.gl{background:rgba(9,15,25,.76);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid var(--ln)}
+.ui{position:fixed;inset:0;z-index:1;pointer-events:none}
+.ui>*{pointer-events:auto}
+.ui>.top{pointer-events:none}
+.top>*{pointer-events:auto}
+.top{position:absolute;left:16px;right:16px;top:calc(12px + env(safe-area-inset-top));display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.logo{font:700 27px/1 var(--hd);letter-spacing:.02em}
+.logo svg{display:block;margin-top:6px;width:132px;height:10px;overflow:visible}
+.logo path{fill:none;stroke:var(--cu);stroke-width:1.6;stroke-dasharray:200;stroke-dashoffset:200;animation:dr 1.8s .3s ease forwards}
+@keyframes dr{to{stroke-dashoffset:0}}
+.nav{display:flex;gap:2px;padding:5px;border-radius:99px;max-width:calc(100vw - 150px);overflow-x:auto;scrollbar-width:none;animation:bob 5s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(5px)}}
+.nav button{padding:7px 14px;border-radius:99px;font-size:14px;font-weight:500;white-space:nowrap;transition:background .25s,color .25s}
+.nav button:hover{background:rgba(255,255,255,.1)}
+.nav .hl{color:#0a0f18;background:var(--c);animation:pu 2.8s infinite}
+@keyframes pu{70%{box-shadow:0 0 0 10px transparent}0%{box-shadow:0 0 0 0 var(--c)}}
+.row{display:flex;gap:8px;flex-wrap:wrap}
+.btn{padding:9px 16px;border-radius:10px;font-weight:500;border:1px solid var(--ln);transition:border-color .25s,filter .25s}
+.btn:hover{border-color:var(--c)}
+.pri{background:var(--c);color:#0a0f18;border-color:var(--c)}
+.pri:hover{filter:brightness(1.12)}
+.hero{position:absolute;left:16px;bottom:calc(92px + env(safe-area-inset-bottom));max-width:410px;padding:18px 20px;border-radius:18px;transition:opacity .4s,transform .4s;animation:fi .9s 1.4s backwards}
+@keyframes fi{from{opacity:0;transform:translateY(14px)}}
+.hero h1{font:700 22px/1.25 var(--hd);margin-bottom:6px}
+.hero p{color:var(--mut);margin-bottom:12px}
+body.open .hero,body.fpo .hero{opacity:0;transform:translateY(12px);pointer-events:none}
+#lbs{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.lb{position:absolute;left:0;top:0;padding:3px 10px;border-radius:99px;font:500 12px var(--bd);white-space:nowrap;background:rgba(8,13,22,.72);border:1px solid var(--ln);pointer-events:auto;transition:border-color .3s}
+.lb:hover,.lb.on{border-color:var(--c)}
+.dock{position:absolute;left:50%;bottom:calc(14px + env(safe-area-inset-bottom));transform:translateX(-50%);display:flex;gap:4px;padding:7px;border-radius:99px;max-width:calc(100% - 24px);overflow-x:auto;scrollbar-width:none;transition:transform .55s cubic-bezier(.2,.9,.3,1.15)}
+.dk{display:flex;align-items:center;gap:8px;height:38px;padding:0 11px;border-radius:99px;flex:none;transition:background .3s}
+.dk i{width:12px;height:12px;border-radius:50%;background:var(--c);box-shadow:0 0 10px var(--c)}
+.dk span{max-width:0;opacity:0;overflow:hidden;white-space:nowrap;font-weight:500;font-size:14px;transition:max-width .45s cubic-bezier(.2,.9,.3,1),opacity .3s}
+.dk:hover span,.dk.on span{max-width:160px;opacity:1}
+.dk.on{background:rgba(255,255,255,.11)}
+.pn,.fp{position:absolute;top:calc(64px + env(safe-area-inset-top));bottom:calc(88px + env(safe-area-inset-bottom));width:min(420px,calc(100% - 32px));border-radius:20px;display:flex;flex-direction:column}
+.pn{right:16px;border-top:2px solid var(--c);box-shadow:0 0 60px -22px var(--c);opacity:0;visibility:hidden;transform:translateX(40px) scale(.98);transition:transform .55s cubic-bezier(.2,.9,.3,1),opacity .35s,visibility 0s .55s}
+body.open .pn{opacity:1;visibility:visible;transform:none;transition:transform .55s cubic-bezier(.2,.9,.3,1),opacity .35s}
+.fp{left:16px;z-index:3;transition:transform .55s cubic-bezier(.2,.9,.3,1),opacity .35s}
+.fp.r{left:auto;right:16px}
+.fp:not(.on){opacity:0;visibility:hidden;transform:translateX(-40px) scale(.98);transition:transform .55s cubic-bezier(.2,.9,.3,1),opacity .35s,visibility 0s .55s}
+.fp.r:not(.on){transform:translateX(40px) scale(.98)}
+.ph,.fh{display:flex;align-items:center;gap:10px;padding:16px 12px 6px 18px}
+.ph h2,.fh h2{font:700 22px/1.1 var(--hd)}
+.fh{justify-content:space-between}
+.bdg{font-size:12px;padding:2px 9px;border-radius:6px;border:1px solid var(--c);color:var(--c);white-space:nowrap}
+.nv{display:flex;margin-left:auto}
+.ib{width:34px;height:34px;border-radius:50%;font-size:20px;line-height:1}
+.ib:hover{background:rgba(255,255,255,.1)}
+.tg{padding:0 18px;color:var(--c);font-weight:500}
+.sc,.fb{flex:1;min-height:0;overflow:auto;padding:12px 18px}
+.fb{display:grid;gap:10px;align-content:start}
+.sc p,.fb p{color:#c5cfdd}
+.sc h3,.fb h3{font:700 14px var(--hd);margin:16px 0 4px}
+.fb h3{margin:6px 0 0}
+.mut{color:var(--mut)!important;font-size:13px}
+.sc ul{list-style:none;padding:0}
+.sc li{padding:7px 0 7px 20px;position:relative;border-bottom:1px solid var(--ln)}
+.sc li:before{content:"";position:absolute;left:0;top:17px;width:11px;height:2px;background:var(--c);box-shadow:0 0 8px var(--c)}
+.sc li b{font-weight:500;color:#fff}
+.ch{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.ch span{padding:3px 9px;border-radius:6px;background:rgba(255,255,255,.07);font-size:13px}
+.ft{display:flex;gap:8px;padding:12px 18px 16px;border-top:1px solid var(--ln)}
+.ft .btn{flex:1}
+.gf{width:100%;height:auto;overflow:visible;margin-bottom:6px}
+.gf text{fill:#c5cfdd;font:9px var(--bd)}
+.fw{stroke-dasharray:5 5;animation:fl 1.4s linear infinite}
+@keyframes fl{to{stroke-dashoffset:-20}}
+#sc{width:100%;aspect-ratio:1;border-radius:14px;background:#060a11;display:block}
+#cl{flex:1;min-height:0;overflow:auto;display:grid;gap:8px;align-content:start;padding:8px 18px}
+.bb{max-width:88%;padding:8px 12px;border-radius:14px;white-space:pre-wrap;font-size:14px}
+.bb.a{background:rgba(255,255,255,.07);justify-self:start}
+.bb.u{background:var(--c);color:#0a0f18;justify-self:end}
+#cf{display:flex;gap:8px;padding:10px 14px 14px;border-top:1px solid var(--ln)}
+#cf .fld{flex:1}
+.ly{position:absolute;z-index:5;top:calc(64px + env(safe-area-inset-top));right:16px;width:230px;padding:8px;border-radius:16px;opacity:0;visibility:hidden;transform:translateY(-8px);transition:.3s}
+.ly.on{opacity:1;visibility:visible;transform:none}
+.ly label{display:flex;justify-content:space-between;align-items:center;padding:8px;border-radius:8px;cursor:pointer;font-size:14px}
+.ly label:hover{background:rgba(255,255,255,.06)}
+.ly input{appearance:none;-webkit-appearance:none;width:34px;height:20px;border-radius:99px;background:#26324a;position:relative;transition:.25s;cursor:pointer;flex:none}
+.ly input:before{content:"";position:absolute;left:3px;top:3px;width:14px;height:14px;border-radius:50%;background:#fff;transition:.25s}
+.ly input:checked{background:var(--c)}
+.ly input:checked:before{transform:translateX(14px)}
+.md{position:fixed;inset:0;z-index:9;display:grid;place-items:center;padding:16px;background:rgba(3,6,10,.66);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);opacity:0;visibility:hidden;transition:.3s}
+.md.on{opacity:1;visibility:visible}
+.md form{width:min(460px,100%);max-height:100%;overflow:auto;padding:22px;border-radius:20px;display:grid;gap:12px;transform:translateY(16px);transition:transform .45s cubic-bezier(.2,.9,.3,1)}
+.md.on form{transform:none}
+.md h2{font:700 20px var(--hd)}
+.md label{display:grid;gap:4px;color:var(--mut);font-size:13px}
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:4px;border-radius:12px;background:rgba(255,255,255,.06)}
+.seg button{padding:8px;border-radius:9px;font-weight:500;transition:.25s}
+.seg button.on{background:var(--c);color:#0a0f18}
+.fld{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--ln);background:rgba(255,255,255,.05);color:var(--ink)}
+.hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
+.nogl .lb{display:none}
+@media(max-width:700px){
+.pn,.fp,.fp.r{left:8px;right:8px;top:auto;bottom:calc(8px + env(safe-area-inset-bottom));width:auto;height:72vh;max-height:72vh}
+.pn{transform:translateY(40px)}
+.fp:not(.on),.fp.r:not(.on){transform:translateY(40px)}
+body.open .dock,body.fpo .dock{transform:translate(-50%,170%)}
+.hero{left:12px;right:12px;bottom:calc(84px + env(safe-area-inset-bottom));max-width:none}
+.hero p{display:none}
+.logo svg{width:90px}
+}
+@media(prefers-reduced-motion:reduce){*,*:before{transition-duration:.01ms!important;animation:none!important}.logo path{stroke-dashoffset:0}}
+</style>
+</head>
+<body>
+<div class="ui">
+ <header class="top">
+  <div class="logo">DorkNet<svg viewBox="0 0 132 10" aria-hidden="true"><path d="M0 8H44L52 2H132"/></svg></div>
+  <nav class="nav gl" aria-label="Menu principal">
+   <button class="hl" data-fp="ai">Assistante AgAtA</button>
+   <button data-fp="ab">À propos</button>
+   <button data-fp="sm">Simulation</button>
+   <button data-fp="ac">Compte</button>
+   <button id="bl" aria-expanded="false">Calques</button>
+   <button data-f="devis">Contact</button>
+  </nav>
+ </header>
+ <div class="ly gl" id="ly" role="group" aria-label="Calques"></div>
+ <div id="lbs"></div>
+ <section class="hero gl">
+  <h1>Dr. Enoch Numbi, fondateur de l'écosystème DorkNet</h1>
+  <p>Ingénierie logicielle, cybersécurité et intelligence artificielle : des systèmes autonomes, légers et intelligents. Tous les systèmes sont fournis sur devis.</p>
+  <div class="row"><button class="btn pri" id="st">Découvrir l'écosystème AGATA</button><button class="btn" data-f="devis">Me contacter</button></div>
+ </section>
+
+ <aside class="pn gl" id="pn" role="dialog" aria-label="Détail du projet" aria-hidden="true">
+  <div class="ph"><h2 id="pt"></h2><span class="bdg" id="pb"></span>
+   <div class="nv"><button class="ib" id="pv" aria-label="Projet précédent">‹</button><button class="ib" id="nx" aria-label="Projet suivant">›</button><button class="ib" id="px" aria-label="Fermer">×</button></div></div>
+  <p class="tg" id="pg"></p>
+  <div class="sc"><div id="pgr"></div><p id="pd"></p><h3>Fonctionnalités</h3><ul id="pf"></ul><h3>Technique</h3><div class="ch" id="pk"></div></div>
+  <div class="ft"><button class="btn pri" data-f="devis">Demander un devis</button><button class="btn" data-f="support">Assistance technique</button></div>
+ </aside>
+
+ <section class="fp gl" id="ab" role="dialog" aria-label="À propos">
+  <div class="fh"><h2>Dr. Enoch Numbi</h2><button class="ib" data-fp="ab" aria-label="Fermer">×</button></div>
+  <div class="fb">
+   <p class="mut">Architecte système, chercheur en cybersécurité et créateur de DorkNet · Kinshasa, RDC</p>
+   <p>Passionné d'ingénierie logicielle, de cybersécurité et d'intelligence artificielle, il conçoit des outils à forte valeur ajoutée pour l'analyse réseau et l'automatisation, sous la marque DorkNet.</p>
+   <p>Convaincu que la sécurité et la puissance logicielle ne doivent pas dépendre d'une infrastructure lourde, il développe des outils légers, autonomes et performants, jusque sur mobile avec Termux.</p>
+   <h3>Réalisation majeure</h3>
+   <p>La suite AGATA (AgAtA-EyEs, AGATA-Ssl…) : audit de sécurité, gestion de la surface d'attaque et cartographie réseau, combinant moteurs Python asynchrones, bases distribuées et IA (Google Gemini).</p>
+   <h3>Stack</h3>
+   <div class="ch"><span>Python</span><span>Scapy</span><span>Asyncio</span><span>Rich</span><span>Typer</span><span>SQLite WAL</span><span>Kali Linux</span><span>Termux</span><span>Supabase</span><span>Gemini API</span></div>
+   <h3>Contact</h3>
+   <p class="mut">dorknet2024@gmail.com · WhatsApp +243 859 148 909 · bot Telegram</p>
+   <div class="row"><button class="btn pri" data-f="devis">Demander un devis</button><button class="btn" data-f="support">Assistance technique</button></div>
+   <p class="mut">Designed &amp; Powered by DorkNet System</p>
+  </div>
+ </section>
+
+ <section class="fp gl" id="sm" role="dialog" aria-label="Simulation de l'interconnexion">
+  <div class="fh"><h2>Interconnexion des systèmes</h2><button class="ib" data-fp="sm" aria-label="Fermer">×</button></div>
+  <div class="fb"><canvas id="sc" aria-label="Simulation animée des flux entre les systèmes DorkNet"></canvas>
+   <p class="mut">Illustration pédagogique : chaque point lumineux représente un échange entre deux systèmes de l'écosystème. Aucune donnée réelle n'est transmise.</p></div>
+ </section>
+
+ <section class="fp gl" id="ac" role="dialog" aria-label="Compte utilisateur">
+  <div class="fh"><h2>Mon compte</h2><button class="ib" data-fp="ac" aria-label="Fermer">×</button></div>
+  <div class="fb"><div id="acb" class="fb" style="padding:0"></div><p class="mut" id="as" role="status"></p>
+   <p class="mut">Un compte permet de suivre vos demandes de devis. La double authentification (application TOTP) est obligatoire.</p></div>
+ </section>
+
+ <section class="fp r gl" id="ai" role="dialog" aria-label="Assistante AgAtA">
+  <div class="fh"><h2>AgAtA, l'assistante</h2><button class="ib" data-fp="ai" aria-label="Fermer">×</button></div>
+  <div id="cl" aria-live="polite"></div>
+  <form id="cf"><input class="fld" id="ci" maxlength="600" placeholder="Posez votre question" aria-label="Votre question" autocomplete="off"><button class="btn pri">Envoyer</button></form>
+ </section>
+
+ <nav class="dock gl" id="dk" aria-label="Projets"></nav>
+</div>
+
+<div class="md" id="md" role="dialog" aria-modal="true" aria-labelledby="mt">
+ <form class="gl">
+  <h2 id="mt"></h2>
+  <div class="seg"><button type="button" data-k="devis">Devis ou achat</button><button type="button" data-k="support">Assistance technique</button></div>
+  <label>Projet concerné<select class="fld" id="pj"></select></label>
+  <input class="fld" id="nm" placeholder="Votre nom ou organisation" aria-label="Votre nom ou organisation" maxlength="120">
+  <textarea class="fld" id="ms" rows="4" maxlength="2000" placeholder="Décrivez votre besoin" aria-label="Votre message"></textarea>
+  <input class="hp" id="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+  <div class="row"><button type="button" class="btn pri" data-s="tg">Envoi direct</button><button type="button" class="btn" data-s="wa">WhatsApp</button><button type="button" class="btn" data-s="ml">E-mail</button><button type="button" class="btn" id="mc">Fermer</button></div>
+  <p class="mut" id="cs" role="status" style="color:var(--mut);font-size:13px"></p>
+ </form>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script>
+const CONTACT={whatsapp:'243859148909',email:'dorknet2024@gmail.com'};
+
+/* Chaque fonctionnalité : « Titre : détail » (le titre alimente le graphique du projet). Tous les systèmes sont sur devis. */
+const P=[
+{n:'DorkNet',c:'#ffb454',s:'Écosystème',t:`Le circuit qui relie tous les projets`,
+ d:`DorkNet est l'écosystème qui rassemble les systèmes AGATA. Ils partagent les mêmes principes : des données vérifiables, une interface fluide et un humain qui garde la main.`,
+ f:[`Écosystème : des outils autonomes, utilisables seuls ou ensemble`,`Sur devis : chaque système est configuré selon votre contexte`,`Assistance : un support technique pour chaque projet`],
+ k:['Écosystème','Sur devis','Support']},
+{n:'AgAtA-EyEs',c:'#6ee7ff',s:'Sur devis',t:`Le globe 3D qui suit le ciel en temps réel`,
+ d:`Plateforme d'intelligence spatiale : un globe 3D fluide qui place planètes, sondes et satellites à leurs positions réelles, avec la source et l'âge de chaque donnée.`,
+ f:[`Positions réelles : éphémérides NASA JPL Horizons, orbites CelesTrak (ISS, Hubble…)`,`Confiance : niveau calculé et affiché pour chaque objet`,`Palettes flottantes : menus qui gardent toute la vue`,`Assistant IA : API Gemini, données sur Supabase`],
+ k:['Three.js','FastAPI','Cesium','satellite.js','Supabase','Gemini']},
+{n:'AGATA',c:'#ff7a66',s:'Sur devis',t:`Cyberdéfense autonome, pensée pour l'Afrique`,
+ d:`Surveille le réseau, détecte les intrusions et corrige les anomalies. Aucune action critique n'est exécutée sans la validation d'un opérateur humain.`,
+ f:[`IDS/IPS : détection et prévention d'intrusions`,`IA locale : Ollama (LLaMA 3.1, Mistral), vos données restent chez vous`,`Validation humaine : obligatoire avant toute action critique`,`Auto-apprentissage : à partir des retours des opérateurs`],
+ k:['Rust','Python','Ollama','Suricata','OPA/Rego','TimescaleDB']},
+{n:'AGATA-Ssl',c:'#5a8bff',s:'Sur devis',t:`Surface d'attaque et audit TLS/PKI`,
+ d:`Solution d'Attack Surface Management (ASM) et d'analyse d'infrastructure TLS/PKI développée en Python.`,
+ f:[`Cartographie : domaines, sous-domaines, IP et services exposés (crt.sh, AlienVault OTX, brute-force DNS asynchrone)`,`Audit TLS/SSL : certificats X.509, configurations obsolètes ou expirées`,`Fuites de secrets : clés API détectées, empreinte SHA-256 seulement`,`Analyse différentielle : évolution entre deux scans`,`Knowledge Graph : domaines, IP, certificats, hébergeurs`,`Équipements : WAF, IoT/OT, Kubernetes, Docker API`],
+ k:['Python','asyncio','SQLite','JSON SIEM/SOC','HTML/SVG','Risk Score','Surface Score']},
+{n:'Agata-Scrap',c:'#f2d15c',s:'Sur devis',t:`Découverte de routes et audit HTTP avancé`,
+ d:`Module de cartographie exhaustive d'une application web pour les auditeurs et les équipes Blue Team.`,
+ f:[`Routes multidimensionnelles : robots.txt, sitemap.xml, endpoints cachés dans le JavaScript`,`Audit différentiel : anonyme contre authentifié`,`Sécurité native : anti-SSRF, same-origin strict, téléchargements limités`,`Empreintes passives : technologies et WAF`,`Fuites : secrets, clés API, traces de debug`,`Rapports : JSON, dashboard HTML, console Rich`],
+ k:['Python','Rich','JSON','HTML']},
+{n:'AGATA-Mail',c:'#ff9bd2',s:'Sur devis',t:`Audit complet de la sécurité e-mail`,
+ d:`Auditeur automatisé de l'infrastructure et de l'authentification de la messagerie : spoofing, phishing et chiffrement.`,
+ f:[`Anti-spoofing : SPF, DKIM (RSA/Ed25519), DMARC`,`Transport : MTA-STS, TLS-RPT, DANE avec DNSSEC`,`Réseau et DNS : MX, IP bogon, CAA`,`SMTP actif : STARTTLS, certificats, test d'Open Relay`,`Défense de marque : domaines typosquattés avec MX actifs`],
+ k:['SPF','DKIM','DMARC','MTA-STS','DANE']},
+{n:'AGATA-INVESTIGATION',c:'#8be0c9',s:'Sur devis',t:`Poste de commandement DFIR, OSINT et Threat Intelligence (v2.1)`,
+ d:`Système souverain d'investigation numérique qui combine IA (RAG vectoriel, LLM) et chaîne de garde forensique, conçu en s'appuyant sur ISO/IEC 27037 et NIST SP 800-86.`,
+ f:[`Chaîne de garde : journal SQLite et scellés SHA-256/MD5`,`RAG local : indexation FAISS, recherche sémantique dans les logs`,`Mode air-gap : exécution 100 % locale via Ollama / Llama3`,`Graphes : liens entre portefeuilles crypto et e-mails (Vis.js)`,`SOAR et Threat Intel : WHOIS, DNS, IP`,`Forensics EXIF : modèle, date, GPS converti en adresse`],
+ k:['Electron 30','FastAPI','FAISS','SQLite','Ollama','Vis.js']},
+{n:'AGATA-2X',c:'#7fd1ff',s:'Sur devis',t:`Console IA locale et scan d'intégrité`,
+ d:`Moteur d'IA local avec console de commandes, contrôle d'intégrité et tableau de bord souverain.`,
+ f:[`Console : requêtes et directives système, rapports sys_report`,`Intégrité : fichiers critiques, statut CLEAN ou WARNING`,`GhostShroud : purge des traces de session et fichiers temporaires`,`Surveillance OSINT : état du service, uptime, flux d'alertes`,`Dashboard : thème sombre, API REST FastAPI avec CORS`],
+ k:['Python','FastAPI','IA locale']},
+{n:'AGATA-AI',c:'#ff8a3d',s:'Sur devis',t:`Détection comportementale et déception`,
+ d:`Analyse des flux réseau par Transformer, bouclier anti-prompt-injection et leurres pilotés par IA.`,
+ f:[`Analyse multicanal : DNS, HTTP(S), QUIC, ICMP, NTP, 18 caractéristiques (entropie de Shannon, débits, jitter…)`,`CERBERUS : Transformer qui distingue comportements bénins et agents malveillants`,`CounterPromptShield : filtre les injections de requêtes`,`Seuil adaptatif : réglé selon l'historique de chaque IP`,`Déception : leurres cohérents (StealthDeceptor, graphe d'état)`,`Enclave matérielle : TEE / AMD SEV-SNP via QEMU`],
+ k:['Transformer','Python','QEMU','SEV-SNP']},
+{n:'AGATA-OSINT',c:'#b2e05a',s:'Sur devis',t:`Assistant OSINT à IA locale`,
+ d:`Assistant d'investigation en sources ouvertes qui fonctionne avec un modèle local, sans dépendance au cloud.`,
+ f:[`IA locale : Ollama et client compatible OpenAI`,`Fuites de données : requêtes sur domaines (Dehashed)`,`Routeur : classe les requêtes vers la bonne fonction OSINT`,`Conversations : historique, streaming, appels de fonctions`,`Éducatif : simulation avec données fictives et conseils`],
+ k:['Ollama','Python','Streaming']},
+{n:'AGATA Master Vault',c:'#ffd28a',s:'Sur devis',t:`Coffre, cortex IA et veille des vulnérabilités`,
+ d:`Plateforme qui agrège les journaux dans un coffre chiffré et les croise avec l'IA et la veille CVE.`,
+ f:[`Agregator : AES-256-GCM, clé PBKDF2, signature HMAC (X-Agata-Sig)`,`RAM volatile : journaux en mémoire, sans trace persistante`,`Porte de sécurité : liste noire d'IP, réponses leurres`,`Cortex : liaison Gemini, clés masquées avant l'IA`,`Global Pulse : alertes critiques NVD (CVE)`,`Gotham : graphes de liens par niveau de risque`,`Agata-Check : tunnels Tor, IP publique, fuites DNS`],
+ k:['AES-256-GCM','HMAC','Gemini','NVD','Tor']},
+{n:'TopoGuard',c:'#c792ff',s:'Sur devis',t:`Sécurité topologique des réseaux (Master Framework)`,
+ d:`Mesure la robustesse structurelle d'un réseau et propose les liaisons à ajouter pour le durcir.`,
+ f:[`Ingestion : capture locale ou PCAP, topologie depuis URL ou IP`,`Spectral : Laplacien, SPOF, goulots, lien optimal à créer`,`Bornes de Cheeger : connectivité et résistance aux coupures`,`T-GAN : simulation adversariale de morphing de trafic`,`Dérive temporelle : variation spectrale en fenêtre glissante`,`TDA GUDHI : homologie persistante, nombres de Betti`,`Algorithme génétique : réseaux de plus de 10 000 nœuds`],
+ k:['Python','GUDHI','NetworkX','Scapy']},
+{n:'TopoGuard-4D',c:'#6ee7b7',s:'Sur devis',t:`Moteur de calcul GPU et traitement 4D`,
+ d:`Réduction topologique de très gros jeux de données, de la cybersécurité à l'industrie et à la génomique.`,
+ f:[`Projection 4D : réduction non linéaire des flux complexes`,`Tessellation : tenseur creux hypercubique adaptatif`,`Morse discrète : compression acyclique, bruit éliminé`,`Homologie GPU : groupes β0 à β4`,`Stabilité de Bottleneck : robustesse validée (Lipschitz)`,`Multi-secteurs : IoT/CAN, SOC (CIC-IDS2017), génomique (MIMIC-IV, TCGA)`],
+ k:['GPU','FastAPI','Visualisation 4D']},
+{n:'AGATA-Morph v3.0',c:'#ff6ba0',s:'Sur devis',t:`Chiffrement GCM, bio-séquençage et sentinelle`,
+ d:`Système de chiffrement authentifié et de surveillance en temps réel, avec sentinelle IA et alertes d'urgence.`,
+ f:[`Chiffrement GCM : AES-256 authentifié pour sceller les séquences`,`Watermark ADN : signature unique et traçable`,`Défense et stase : température de bio-stase, taux d'ATP`,`Protocole Cendres : alertes Telegram en cas de dépassement`,`Cortex Gemini : interroger la sentinelle et analyser l'état`,`Forgeur : export FASTA chiffré avec métadonnées (watermark, IV)`],
+ k:['AES-256-GCM','FASTA','Telegram','Gemini']},
+{n:'AGATA-SCA',c:'#e6c15a',s:'Sur devis',t:`Savoir ce que contiennent vos logiciels`,
+ d:`Analyse les composants de vos applications et leur chaîne d'approvisionnement pour montrer quelles failles vous exposent vraiment.`,
+ f:[`Inventaire : dépendances et vulnérabilités`,`Atteignabilité : seules les failles exploitables passent en priorité`,`Chaîne logicielle : visibilité complète`],
+ k:['SCA','Supply chain']},
+{n:'AgAtA-FaCe',c:'#b79cff',s:'Sur devis',t:`Authentification faciale anti-fraude`,
+ d:`Vérifie qu'un visage appartient à une personne vivante devant la caméra, et non à une photo ou une vidéo.`,
+ f:[`Vivacité : RGB, proche infrarouge, profondeur, rPPG`,`Empreintes : ONNX 512 dimensions, recherche FAISS`,`Registre : chiffré AES-256-GCM, journal d'audit chaîné`,`Tableau de bord : terminal avec Rich`],
+ k:['MediaPipe','ONNX','FAISS','Rich']}
+];
+const LK=[[3,4],[4,5],[3,5],[6,9],[6,8],[8,2],[2,7],[10,1],[10,8],[11,12],[11,2],[13,10],[14,3],[15,2]];
+
+const $=s=>document.querySelector(s),RM=matchMedia('(prefers-reduced-motion:reduce)').matches;
+const esc=t=>String(t).replace(/[&<>"']/g,c=>'&#'+c.charCodeAt(0)+';');
+let sel=-1,kind='devis',ALL=false,simOn=false,simId=0;const L={};
+
+/* ---------- Interface ---------- */
+P.forEach((p,i)=>{
+ $('#dk').insertAdjacentHTML('beforeend',`<button class="dk" style="--c:${p.c}" data-i="${i}" aria-label="${esc(p.n)}"><i></i><span>${esc(p.n)}</span></button>`);
+ $('#lbs').insertAdjacentHTML('beforeend',`<button class="lb" style="--c:${p.c}" data-i="${i}">${esc(p.n)}</button>`);
+});
+const LY=[['grid','Circuit imprimé'],['wires','Câbles de liaison'],['pulse','Impulsions'],['dust','Particules'],['lbs','Toutes les étiquettes']];
+$('#ly').innerHTML=LY.map(([k,n])=>`<label>${n}<input type="checkbox" data-l="${k}"${k==='lbs'?'':' checked'}></label>`).join('');
+$('#ly').onchange=e=>{const k=e.target.dataset.l,v=e.target.checked;if(k==='lbs')ALL=v;else if(L[k])L[k].visible=v};
+$('#bl').onclick=e=>{e.stopPropagation();$('#bl').setAttribute('aria-expanded',$('#ly').classList.toggle('on'))};
+
+function graph(p){
+ const m=p.f.slice(0,6).map(x=>x.split(' : ')[0].slice(0,15)),n=m.length;
+ let s=`<svg class="gf" viewBox="0 0 360 170" role="img" aria-label="Schéma des modules de ${esc(p.n)}"><g stroke="${p.c}" fill="none" stroke-width="1.2">`,t='';
+ m.forEach((l,k)=>{const a=k/n*6.283-1.57,X=Math.round(180+Math.cos(a)*95),Y=Math.round(85+Math.sin(a)*60),mid=Math.abs(X-180)<12,an=mid?'middle':X>180?'start':'end',ox=mid?0:X>180?8:-8,oy=mid?(Y>85?16:-9):3;
+  s+=`<path class="fw" d="M180 85H${X}V${Y}"/><circle cx="${X}" cy="${Y}" r="4" fill="${p.c}"/>`;
+  t+=`<text x="${X+ox}" y="${Y+oy}" text-anchor="${an}">${esc(l)}</text>`});
+ return s+`<circle cx="180" cy="85" r="13" fill="${p.c}" fill-opacity=".22"/></g>${t}</svg>`;
+}
+function show(i){
+ FPS.forEach(k=>$('#'+k).classList.remove('on'));simOn=false;document.body.classList.remove('fpo');
+ sel=i;const p=P[i],pn=$('#pn');pn.style.setProperty('--c',p.c);
+ $('#pt').textContent=p.n;$('#pb').textContent=p.s;$('#pg').textContent=p.t;$('#pd').textContent=p.d;$('#pgr').innerHTML=graph(p);
+ $('#pf').innerHTML=p.f.map(x=>`<li>${esc(x).replace(/^(.*?) : /,'<b>$1</b> : ')}</li>`).join('');
+ $('#pk').innerHTML=p.k.map(x=>`<span>${esc(x)}</span>`).join('');
+ pn.querySelector('.sc').scrollTop=0;pn.setAttribute('aria-hidden','false');
+ document.body.classList.add('open');mark();
+}
+function hide(){sel=-1;$('#pn').setAttribute('aria-hidden','true');document.body.classList.remove('open');mark()}
+function mark(){document.querySelectorAll('.dk,.lb').forEach(b=>{const on=+b.dataset.i===sel;b.classList.toggle('on',on);if(on&&b.classList.contains('dk'))b.scrollIntoView({inline:'center',block:'nearest',behavior:'smooth'})})}
+const go=d=>show((sel+d+P.length)%P.length);
+$('#pv').onclick=()=>go(-1);$('#nx').onclick=()=>go(1);$('#px').onclick=hide;$('#st').onclick=()=>show(2);
+
+/* Menus flottants (à propos, simulation, compte, assistante) */
+const FPS=['ab','sm','ac','ai'];
+function fp(id){
+ const el=$('#'+id),on=!el.classList.contains('on');
+ FPS.forEach(k=>$('#'+k).classList.remove('on'));simOn=false;document.body.classList.toggle('fpo',on);
+ if(on){if(sel>=0)hide();el.classList.add('on');if(id==='sm')simStart();if(id==='ac')acInit();if(id==='ai')setTimeout(()=>$('#ci').focus({preventScroll:true}),400)}
+}
+document.addEventListener('click',e=>{
+ const b=e.target.closest('.dk,.lb'),f=e.target.closest('[data-f]'),q=e.target.closest('[data-fp]');
+ if(b)show(+b.dataset.i);
+ if(q)fp(q.dataset.fp);
+ if(f)openForm(f.dataset.f);
+ if(!e.target.closest('#ly,#bl'))$('#ly').classList.remove('on');
+});
+document.addEventListener('keydown',e=>{
+ if(e.key==='Escape'){const o=FPS.find(k=>$('#'+k).classList.contains('on'));
+  if($('#md').classList.contains('on'))closeForm();else if($('#ly').classList.contains('on'))$('#ly').classList.remove('on');else if(o)fp(o);else hide()}
+ else if(sel>=0&&!$('#md').classList.contains('on')&&!/INPUT|TEXTAREA|SELECT/.test(e.target.tagName)){if(e.key==='ArrowRight')go(1);if(e.key==='ArrowLeft')go(-1)}
+});
+
+/* ---------- Assistante AgAtA (Gemini via le serveur : la clé reste côté serveur) ---------- */
+const cl=$('#cl'),hist=[];
+function bub(t,w){const d=document.createElement('div');d.className='bb '+w;d.textContent=t;cl.append(d);cl.scrollTop=cl.scrollHeight;return d}
+bub(`Bonjour, je suis AgAtA, l'assistante de DorkNet. Posez-moi vos questions sur les projets, les devis ou l'assistance technique.`,'a');
+$('#cf').addEventListener('submit',async e=>{
+ e.preventDefault();const i=$('#ci'),m=i.value.trim();if(!m)return;
+ i.value='';bub(m,'u');const w=bub('…','a');i.disabled=true;
+ try{const r=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:m,history:hist.slice(-6)})});
+  if(r.status===429){w.textContent='Trop de messages. Patientez une minute avant de réessayer.'}
+  else{const j=await r.json();if(!r.ok||!j.reply)throw 0;w.textContent=j.reply;hist.push({r:'user',t:m},{r:'model',t:j.reply})}}
+ catch(x){w.textContent='Assistante momentanément indisponible. Écrivez-nous sur WhatsApp ou par e-mail : dorknet2024@gmail.com'}
+ i.disabled=false;i.focus();
+});
+
+/* ---------- Compte utilisateur (Supabase Auth, MFA TOTP) ---------- */
+let sb=null;const ac=$('#acb'),say=m=>$('#as').textContent=m;
+async function sbInit(){
+ if(sb)return sb;const c=await (await fetch('/api/config')).json();
+ if(!c.url||!c.anon||!window.supabase)throw 0;
+ return sb=supabase.createClient(c.url,c.anon,{auth:{persistSession:true,autoRefreshToken:true}});
+}
+function viewAuth(){
+ ac.innerHTML=`<input class="fld" id="em" type="email" placeholder="E-mail" autocomplete="email"><input class="fld" id="pw" type="password" placeholder="Mot de passe (12 caractères minimum)" autocomplete="current-password"><div class="row"><button class="btn pri" id="li">Se connecter</button><button class="btn" id="su">Créer un compte</button></div>`;
+ $('#li').onclick=()=>auth('in');$('#su').onclick=()=>auth('up');
+}
+async function auth(k){
+ try{const s=await sbInit(),em=$('#em').value.trim(),pw=$('#pw').value;
+  if(pw.length<12)return say('Mot de passe : 12 caractères minimum.');
+  const r=k==='up'?await s.auth.signUp({email:em,password:pw}):await s.auth.signInWithPassword({email:em,password:pw});
+  if(r.error)return say(r.error.message);
+  if(k==='up'&&!r.data.session)return say('Compte créé. Confirmez votre e-mail, puis connectez-vous.');
+  say('');await viewMfa();
+ }catch(e){say('Service de comptes indisponible pour le moment.')}
+}
+async function viewMfa(){
+ const s=await sbInit(),{data:a}=await s.auth.mfa.getAuthenticatorAssuranceLevel();
+ if(a.currentLevel==='aal2')return viewIn();
+ const {data:f}=await s.auth.mfa.listFactors(),t=(f.totp||[]).find(x=>x.status==='verified');
+ let id,qr='';
+ if(t)id=t.id;else{const {data:e,error}=await s.auth.mfa.enroll({factorType:'totp'});if(error)return say(error.message);id=e.id;qr=`<img alt="QR code à scanner" src="${e.totp.qr_code}" width="160" height="160">`}
+ ac.innerHTML=`<p>${t?`Entrez le code de votre application d'authentification.`:`Double authentification obligatoire : scannez ce code avec une application d'authentification, puis saisissez le code.`}</p>${qr}<input class="fld" id="cd" inputmode="numeric" maxlength="6" placeholder="Code à 6 chiffres" autocomplete="one-time-code"><button class="btn pri" id="vf">Valider</button>`;
+ $('#vf').onclick=async()=>{const {error}=await s.auth.mfa.challengeAndVerify({factorId:id,code:$('#cd').value.trim()});if(error)say('Code invalide.');else{say('');viewIn()}};
+}
+async function viewIn(){
+ const s=await sbInit(),{data}=await s.auth.getUser();
+ ac.innerHTML=`<p>Connecté : <b>${esc(data.user.email)}</b><br>Double authentification vérifiée.</p><div class="row"><button class="btn pri" data-f="devis">Demander un devis</button><button class="btn" id="lo">Se déconnecter</button></div>`;
+ $('#lo').onclick=async()=>{await s.auth.signOut();viewAuth()};
+}
+async function acInit(){
+ viewAuth();
+ try{const s=await sbInit(),{data}=await s.auth.getSession();if(data.session)await viewMfa()}catch(e){say('Service de comptes indisponible pour le moment.')}
+}
+
+/* ---------- Simulation d'interconnexion (canvas 2D, traînées lumineuses) ---------- */
+function simStart(){
+ const c=$('#sc'),x=c.getContext('2d'),r=c.getBoundingClientRect(),d=Math.min(devicePixelRatio,2),w=r.width,h=r.height,id=++simId;
+ c.width=w*d;c.height=h*d;x.setTransform(d,0,0,d,0,0);simOn=true;
+ const nd=P.map((p,i)=>{if(!i)return{x:w/2,y:h/2};const a=(i-1)/(P.length-1)*6.283-1.57;return{x:w/2+Math.cos(a)*w*.37,y:h/2+Math.sin(a)*h*.37}}),
+  ln=[...LK,...P.slice(1).map((_,i)=>[0,i+1])];let pk=[];
+ x.fillStyle='#060a11';x.fillRect(0,0,w,h);
+ (function f(){
+  if(!simOn||id!==simId)return;requestAnimationFrame(f);
+  x.globalCompositeOperation='source-over';x.fillStyle='rgba(6,10,17,.16)';x.fillRect(0,0,w,h);
+  if(Math.random()<(RM?.08:.35)){const l=ln[Math.random()*ln.length|0],q=Math.random()<.5;pk.push({a:q?l[0]:l[1],b:q?l[1]:l[0],t:0,v:.008+Math.random()*.014})}
+  x.strokeStyle='rgba(200,128,60,.22)';ln.forEach(([a,b])=>{x.beginPath();x.moveTo(nd[a].x,nd[a].y);x.lineTo(nd[b].x,nd[b].y);x.stroke()});
+  x.globalCompositeOperation='lighter';
+  pk.forEach(k=>{k.t+=k.v;const A=nd[k.a],B=nd[k.b];x.fillStyle=x.shadowColor=P[k.a].c;x.shadowBlur=12;x.beginPath();x.arc(A.x+(B.x-A.x)*k.t,A.y+(B.y-A.y)*k.t,2.6,0,6.283);x.fill()});
+  pk=pk.filter(k=>k.t<1);x.shadowBlur=0;x.globalCompositeOperation='source-over';
+  x.font='9px IBM Plex Sans,sans-serif';x.textAlign='center';
+  nd.forEach((n,i)=>{x.fillStyle=P[i].c;x.beginPath();x.arc(n.x,n.y,i?5:9,0,6.283);x.fill();x.fillStyle='#e9eef6';
+   x.fillText(i?(P[i].n.replace(/^Ag?AtA[- ]?/i,'').trim()||P[i].n):'DorkNet',n.x,n.y+(i?16:24))});
+ })();
+}
+
+/* ---------- Devis / assistance ---------- */
+function setK(k){kind=k;document.querySelectorAll('.seg button').forEach(b=>b.classList.toggle('on',b.dataset.k===k));
+ $('#mt').textContent=k==='devis'?'Demander un devis':'Demander une assistance technique'}
+function openForm(k){
+ const md=$('#md');md.style.setProperty('--c',P[Math.max(sel,0)].c);
+ $('#pj').innerHTML='<option>Question générale (DorkNet)</option>'+P.slice(1).map(x=>`<option>${esc(x.n)}</option>`).join('');
+ if(sel>0)$('#pj').value=P[sel].n;
+ $('#cs').textContent='';setK(k);md.classList.add('on');setTimeout(()=>$('#nm').focus({preventScroll:true}),350);
+}
+function closeForm(){$('#md').classList.remove('on')}
+document.querySelector('#md form').addEventListener('submit',e=>e.preventDefault());
+document.querySelectorAll('.seg button').forEach(b=>b.onclick=()=>setK(b.dataset.k));
+$('#mc').onclick=closeForm;
+$('#md').addEventListener('click',e=>{if(e.target===$('#md'))closeForm()});
+document.querySelectorAll('[data-s]').forEach(b=>b.onclick=async()=>{
+ const obj=kind==='devis'?'Devis':'Assistance technique',e=encodeURIComponent,
+ txt=`Bonjour, je suis ${$('#nm').value.trim()||'un visiteur de DorkNet'}.\nObjet : ${obj}\nProjet : ${$('#pj').value}\n\n${$('#ms').value.trim()||'Je souhaite être recontacté(e).'}`;
+ if(b.dataset.s==='tg'){
+  $('#cs').textContent='Envoi en cours…';
+  try{const r=await fetch('/api/contact',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({nom:$('#nm').value,kind,projet:$('#pj').value,message:$('#ms').value,site:$('#hp').value})});
+   $('#cs').textContent=r.ok?'Demande envoyée. Nous vous répondons rapidement.':r.status===429?'Trop de demandes. Réessayez plus tard.':`Envoi impossible. Utilisez WhatsApp ou l'e-mail.`}
+  catch(x){$('#cs').textContent=`Envoi impossible. Utilisez WhatsApp ou l'e-mail.`}
+  return}
+ const u={wa:`https://wa.me/${CONTACT.whatsapp}?text=${e(txt)}`,ml:`mailto:${CONTACT.email}?subject=${e('DorkNet — '+obj)}&body=${e(txt)}`}[b.dataset.s];
+ window.open(u,'_blank','noopener');
+});
+
+/* ---------- Scène 3D ---------- */
+function init3D(){
+ const T=THREE,V=(x,y,z)=>new T.Vector3(x,y,z);
+ const R=new T.WebGLRenderer({antialias:true,alpha:true,powerPreference:'high-performance'});
+ R.setPixelRatio(Math.min(devicePixelRatio,1.75));R.domElement.className='w3';
+ document.body.prepend(R.domElement);
+ const S=new T.Scene(),cam=new T.PerspectiveCamera(55,1,.1,200),W=new T.Group();
+ S.fog=new T.FogExp2(0x060a11,.026);S.add(W);
+
+ // Calque 1 : circuit imprimé au sol
+ const FL=new T.Group();FL.position.y=-2.4;W.add(FL);L.grid=FL;
+ const grid=new T.GridHelper(26,26,0x2b3d52,0x152233);grid.material.transparent=true;grid.material.opacity=.55;FL.add(grid);
+ const pv=[];
+ for(let k=0;k<46;k++){let x=(Math.random()-.5)*22,z=(Math.random()-.5)*22,h=k%2;
+  for(let s=0;s<4;s++){const l=(Math.random()*3+1)*(Math.random()<.5?-1:1),nx=h?x+l:x,nz=h?z:z+l;pv.push(x,0,z,nx,0,nz);x=nx;z=nz;h=!h}}
+ const buf=a=>new T.BufferGeometry().setAttribute('position',new T.Float32BufferAttribute(a,3));
+ const pg=buf(pv),pcb=new T.LineSegments(pg,new T.LineBasicMaterial({color:0xc8803c,transparent:true,opacity:.35}));
+ FL.add(pcb,new T.Points(pg,new T.PointsMaterial({color:0xffb454,size:.09,transparent:true,opacity:.7})));
+
+ // Nœuds : hub au centre, projets en couronne (N projets)
+ const N=P.length-1,pos=[V(0,0,0)];
+ for(let i=1;i<=N;i++){const a=(i-1)/N*Math.PI*2+.4,r=3.6+(i%3)*.7;pos.push(V(Math.cos(a)*r,Math.sin(i*2.1)*1.3,Math.sin(a)*r))}
+
+ // Calque 2 : câbles de liaison
+ const GW=new T.Group();W.add(GW);L.wires=GW;
+ const TR=[],vias=[],tc=new T.Color();
+ function trace(pts,own,col){
+  const m=new T.LineBasicMaterial({color:0xc8803c,transparent:true,opacity:0}),cum=[0];
+  GW.add(new T.Line(new T.BufferGeometry().setFromPoints(pts),m));
+  for(let k=1;k<pts.length;k++)cum.push(cum[k-1]+pts[k].distanceTo(pts[k-1]));
+  TR.push({pts,cum,len:cum[cum.length-1],own,col,c3:new T.Color(col),m,ph:Math.random()});
+  pts.slice(1,-1).forEach(q=>vias.push(q.x,q.y,q.z));
+ }
+ for(let i=1;i<=N;i++){const n=pos[i];
+  trace(i%2?[V(0,0,0),V(n.x,0,0),V(n.x,0,n.z),n]:[V(0,0,0),V(0,0,n.z),V(n.x,0,n.z),n],[i],P[i].c)}
+ for(let i=1;i<=N;i++){const j=i%N+1,a=pos[i],b=pos[j];trace([a,V(a.x,a.y,b.z),b],[i,j],P[i].c)}
+ const sv=[];pos.forEach(p=>sv.push(p.x,p.y,p.z,p.x,-2.4,p.z));
+ GW.add(new T.LineSegments(buf(sv),new T.LineBasicMaterial({color:0x3a5068,transparent:true,opacity:.5})),
+  new T.Points(buf(vias),new T.PointsMaterial({color:0xffb454,size:.11,transparent:true,opacity:.9})));
+
+ // Calque 3 : impulsions lumineuses
+ const cv=document.createElement('canvas');cv.width=cv.height=64;
+ const cx=cv.getContext('2d'),gr=cx.createRadialGradient(32,32,0,32,32,32);
+ gr.addColorStop(0,'#fff');gr.addColorStop(.3,'rgba(255,255,255,.55)');gr.addColorStop(1,'rgba(255,255,255,0)');
+ cx.fillStyle=gr;cx.fillRect(0,0,64,64);
+ const NP=TR.length*2,pp=new Float32Array(NP*3),pc=new Float32Array(NP*3),pgeo=new T.BufferGeometry();
+ pgeo.setAttribute('position',new T.BufferAttribute(pp,3));pgeo.setAttribute('color',new T.BufferAttribute(pc,3));
+ const pls=new T.Points(pgeo,new T.PointsMaterial({map:new T.CanvasTexture(cv),size:.42,vertexColors:true,transparent:true,depthWrite:false,blending:T.AdditiveBlending}));
+ pls.frustumCulled=false;W.add(pls);L.pulse=pls;
+ const tv=V(0,0,0);
+ function at(t,u){const d=u*t.len;let k=1;while(k<t.cum.length-1&&t.cum[k]<d)k++;
+  return tv.lerpVectors(t.pts[k-1],t.pts[k],(d-t.cum[k-1])/(t.cum[k]-t.cum[k-1]||1))}
+
+ // Calque 4 : nœuds-projets
+ const ND=[],hits=[];
+ P.forEach((p,i)=>{
+  const r=i?.34:.62,col=new T.Color(p.c),g=new T.Group();g.position.copy(pos[i]);
+  const wire=new T.Mesh(new T.IcosahedronGeometry(r,1),new T.MeshBasicMaterial({color:col,wireframe:true,transparent:true,opacity:.9}));
+  const core=new T.Mesh(new T.OctahedronGeometry(r*.5),new T.MeshBasicMaterial({color:col,transparent:true,opacity:.9}));
+  const ring=new T.Mesh(new T.TorusGeometry(r*1.7,.014,8,72),new T.MeshBasicMaterial({color:col,transparent:true,opacity:.55}));ring.rotation.x=Math.PI/2.4;
+  const hit=new T.Mesh(new T.SphereGeometry(r*2.1,8,8),new T.MeshBasicMaterial({visible:false}));hit.userData.i=i;
+  g.add(wire,core,ring,hit);W.add(g);ND.push({g,wire,core,ring,h:1});hits.push(hit);
+ });
+
+ // Calque 5 : poussière lointaine (parallaxe)
+ const dp=[];
+ for(let k=0;k<700;k++){const r=9+Math.random()*10,a=Math.random()*6.283,b=Math.acos(2*Math.random()-1);dp.push(r*Math.sin(b)*Math.cos(a),r*Math.cos(b)*.7,r*Math.sin(b)*Math.sin(a))}
+ const dust=new T.Points(buf(dp),new T.PointsMaterial({color:0x7fdcff,size:.05,transparent:true,opacity:.55,depthWrite:false}));
+ S.add(dust);L.dust=dust;
+
+ // Caméra, interactions
+ let dist=11;
+ function size(){const w=innerWidth,h=innerHeight,a=w/h;R.setSize(w,h);cam.aspect=a;cam.updateProjectionMatrix();
+  dist=a<1?11+(1-a)*13:11;W.scale.setScalar(a<1?.72:1)}
+ addEventListener('resize',size);size();
+ cam.position.set(0,9,dist*1.8);
+ const lk=V(0,.2,0),tp=V(0,0,0),tl=V(0,0,0),dir=V(0,0,1),op=V(0,0,0),ray=new T.Raycaster(),mp=new T.Vector2(),px={x:0,y:0},cvs=R.domElement;
+ let hv=-1,down=null,last=0,spin=0;const base=RM?0:.08;let bs=base;
+ function pick(e){mp.set(e.clientX/innerWidth*2-1,-(e.clientY/innerHeight)*2+1);ray.setFromCamera(mp,cam);
+  const h=ray.intersectObjects(hits)[0];hv=h?h.object.userData.i:-1;cvs.style.cursor=h?'pointer':'grab'}
+ cvs.addEventListener('pointermove',e=>{px.x=e.clientX/innerWidth-.5;px.y=e.clientY/innerHeight-.5;
+  if(down){const dx=e.clientX-last;last=e.clientX;W.rotation.y+=dx*.006;spin=Math.max(-5,Math.min(5,dx*.36))}else pick(e)});
+ cvs.addEventListener('pointerdown',e=>{down=[e.clientX,e.clientY];last=e.clientX;pick(e)});
+ addEventListener('pointerup',e=>{if(!down)return;
+  if(Math.hypot(e.clientX-down[0],e.clientY-down[1])<6){if(hv>=0)show(hv);else if(e.target===cvs){if(sel>=0)hide();else FPS.forEach(k=>$('#'+k).classList.contains('on')&&fp(k))}}down=null});
+
+ const clock=new T.Clock(),lbs=document.querySelectorAll('.lb');let tm=0;
+ (function frame(){
+  requestAnimationFrame(frame);
+  const dt=Math.min(clock.getDelta(),.05);tm+=dt;
+  bs+=((sel>=0?0:base)-bs)*Math.min(1,dt*3);
+  W.rotation.y+=(bs+spin)*dt;spin*=Math.pow(.04,dt);
+  dust.rotation.y-=dt*.012;
+  pcb.material.opacity=.3+.1*Math.sin(tm*1.2);
+
+  // Caméra fluide : vol vers le nœud choisi
+  if(sel>=0){
+   ND[sel].g.getWorldPosition(op);dir.set(op.x,0,op.z);if(dir.lengthSq()<.01)dir.set(0,0,1);dir.normalize();
+   tp.copy(op).addScaledVector(dir,sel?3.6:5.2);tp.y+=sel?1.1:1.6;
+   tl.copy(op);if(innerWidth>700){tl.x+=dir.z*1.5;tl.z-=dir.x*1.5}else tl.y-=.9;
+  }else{tp.set(px.x*2.4,3.4-px.y*1.6,dist);tl.set(0,.2,0)}
+  const k=1-Math.exp(-dt*(sel>=0?3.2:2));
+  cam.position.lerp(tp,k);lk.lerp(tl,k);cam.lookAt(lk);cam.updateMatrixWorld();
+
+  // Câbles et impulsions
+  let o=0;
+  TR.forEach((t,j)=>{
+   const hl=sel>=0&&(sel===0?t.own.length===1:t.own.includes(sel)),
+    ba=Math.min(1,Math.max(0,(tm-.6-j*.04)/.9));
+   t.m.color.lerp(tc.set(hl?t.col:0xc8803c),Math.min(1,dt*6));
+   t.m.opacity=ba*(hl?1:sel>=0?.35:.7);
+   const f=(hl?1.5:sel>=0?.35:.9)*(ba>.5?1:0);t.ph+=dt*(hl?.42:RM?.06:.17);
+   for(let q=0;q<2;q++){const v=at(t,(t.ph+q*.5)%1);
+    pp[o]=v.x;pp[o+1]=v.y;pp[o+2]=v.z;pc[o]=t.c3.r*f;pc[o+1]=t.c3.g*f;pc[o+2]=t.c3.b*f;o+=3}
+  });
+  pgeo.attributes.position.needsUpdate=true;pgeo.attributes.color.needsUpdate=true;
+
+  // Nœuds + étiquettes
+  ND.forEach((n,i)=>{
+   const e=Math.min(1,Math.max(0,(tm-.3-i*.09)/.8)),s=1+2.70158*Math.pow(e-1,3)+1.70158*Math.pow(e-1,2);
+   n.h+=((hv===i||sel===i?1.25:1)-n.h)*Math.min(1,dt*8);n.g.scale.setScalar(Math.max(.001,s*n.h));
+   n.wire.rotation.y+=dt*.5;n.wire.rotation.x+=dt*.2;n.core.rotation.y-=dt*.8;n.ring.rotation.z+=dt*.7;
+   n.g.getWorldPosition(op);op.project(cam);const el=lbs[i];
+   if(op.z>1||e<.3||!(ALL||hv===i||sel===i||i===0)){el.style.opacity=0;el.style.pointerEvents='none'}
+   else{el.style.opacity=1;el.style.pointerEvents='';
+    el.style.transform=`translate(${(op.x*.5+.5)*innerWidth}px,${(-op.y*.5+.5)*innerHeight}px) translate(-50%,${i?18:30}px)`}
+  });
+  R.render(S,cam);
+ })();
+}
+try{init3D()}catch(err){document.body.classList.add('nogl');console.warn('WebGL indisponible',err)}
+</script>
+</body>
+</html>
