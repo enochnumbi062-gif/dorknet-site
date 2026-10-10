@@ -139,10 +139,11 @@ body.open .dock,body.fpo .dock{transform:translate(-50%,170%)}
  <div class="ly gl" id="ly" role="group" aria-label="Calques"></div>
  <div id="lbs"></div>
  <section class="hero gl">
-  <p class="mut" style="font-size:12px;text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px;color:var(--c)!important;">ÉCOSYSTÈME CYBER &amp; IA</p>
-  <h1>Bienvenue sur la plateforme DorkNet</h1>
-  <p>Au cœur de la technologie d'analyse avancée et de l'écosystème AgAtA.</p>
-  <div class="row"><button class="btn pri" id="st">Découvrir l'écosystème AGATA</button><button class="btn" data-f="devis">Me contacter</button></div>
+  <h1>Bienvenue sur la plateforme DorkNet,
+au cœur de la technologie d'analyse
+avancée et de l'écosystème AgAtA</h1>
+  <p>Ingénierie logicielle, cybersécurité et intelligence artificielle : des systèmes autonomes, légers et intelligents. Tous les systèmes sont fournis sur devis.</p>
+  <div class="row"><button class="btn pri" id="st">Découvrir l'écosystème AgAtA</button><button class="btn" data-f="devis">Me contacter</button></div>
  </section>
 
  <aside class="pn gl" id="pn" role="dialog" aria-label="Détail du projet" aria-hidden="true">
@@ -156,13 +157,13 @@ body.open .dock,body.fpo .dock{transform:translate(-50%,170%)}
  <section class="fp gl" id="ab" role="dialog" aria-label="À propos">
   <div class="fh"><h2>Dr. Enoch Numbi</h2><button class="ib" data-fp="ab" aria-label="Fermer">×</button></div>
   <div class="fb">
-   <p class="mut">Architecte système, chercheur en cybersécurité et créateur de DorkNet · Kinshasa, RDC</p>
+   <p class="mut">Architecte système, chercheur en cybersécurité et créateur de DorkNet</p>
    <p>Passionné d'ingénierie logicielle, de cybersécurité et d'intelligence artificielle, il conçoit des outils à forte valeur ajoutée pour l'analyse réseau et l'automatisation, sous la marque DorkNet.</p>
    <p>Convaincu que la sécurité et la puissance logicielle ne doivent pas dépendre d'une infrastructure lourde, il développe des outils légers, autonomes et performants, jusque sur mobile avec Termux.</p>
    <h3>Réalisation majeure</h3>
-   <p>La suite AGATA (AgAtA-EyEs, AGATA-Ssl…) : audit de sécurité, gestion de la surface d'attaque et cartographie réseau, combinant moteurs Python asynchrones, bases distribuées et IA (Google Gemini).</p>
+   <p>La suite AgAtA (AgAtA-EyEs, AGATA-Ssl…) : audit de sécurité, gestion de la surface d'attaque et cartographie réseau, combinant moteurs Python asynchrones, bases distribuées et IA (Google Gemini).</p>
    <h3>Stack</h3>
-   <div class="ch"><span>Python</span><span>Scapy</span><span>Asyncio</span><span>Rich</span><span>Typer</span><span>SQLite WAL</span><span>Kali Linux</span><span>Termux</span><span>Supabase</span><span>Gemini API</span></div>
+   <div class="ch"><span>Python</span><span>Scapy</span><span>Asyncio</span><span>Rich</span><span>Typer</span><span>SQLite WAL</span><span>Kali Linux</span><span>Termux</span><span>Supabase</span><span>AgAtA-IA</span></div>
    <h3>Contact</h3>
    <p class="mut">dorknet2024@gmail.com · WhatsApp +243 859 148 909 · bot Telegram</p>
    <div class="row"><button class="btn pri" data-f="devis">Demander un devis</button><button class="btn" data-f="support">Assistance technique</button></div>
@@ -212,13 +213,13 @@ const CONTACT={whatsapp:'243859148909',email:'dorknet2024@gmail.com'};
 /* Chaque fonctionnalité : « Titre : détail » (le titre alimente le graphique du projet). Tous les systèmes sont sur devis. */
 const P=[
 {n:'DorkNet',c:'#ffb454',s:'Écosystème',t:`Le circuit qui relie tous les projets`,
- d:`DorkNet est l'écosystème qui rassemble les systèmes AGATA. Ils partagent les mêmes principes : des données vérifiables, une interface fluide et un humain qui garde la main.`,
+ d:`DorkNet est l'écosystème qui rassemble les systèmes AgAtA. Ils partagent les mêmes principes : des données vérifiables, une interface fluide et un humain qui garde la main.`,
  f:[`Écosystème : des outils autonomes, utilisables seuls ou ensemble`,`Sur devis : chaque système est configuré selon votre contexte`,`Assistance : un support technique pour chaque projet`],
  k:['Écosystème','Sur devis','Support']},
 {n:'AgAtA-EyEs',c:'#6ee7ff',s:'Sur devis',t:`Le globe 3D qui suit le ciel en temps réel`,
  d:`Plateforme d'intelligence spatiale : un globe 3D fluide qui place planètes, sondes et satellites à leurs positions réelles, avec la source et l'âge de chaque donnée.`,
- f:[`Positions réelles : éphémérides NASA JPL Horizons, orbites CelesTrak (ISS, Hubble…)`,`Confiance : niveau calculé et affiché pour chaque objet`,`Palettes flottantes : menus qui gardent toute la vue`,`Assistant IA : API Gemini, données sur Supabase`],
- k:['Three.js','FastAPI','Cesium','satellite.js','Supabase','Gemini']},
+ f:[`Positions réelles : éphémérides NASA JPL Horizons, orbites CelesTrak (ISS, Hubble…)`,`Confiance : niveau calculé et affiché pour chaque objet`,`Palettes flottantes : menus qui gardent toute la vue`,`Assistant IA ; AgAtA-IA, données sur Supabase`],
+ k:['Three.js','FastAPI','Cesium','satellite.js','Supabase','AgAtA-IA']},
 {n:'AGATA',c:'#ff7a66',s:'Sur devis',t:`Cyberdéfense autonome, pensée pour l'Afrique`,
  d:`Surveille le réseau, détecte les intrusions et corrige les anomalies. Aucune action critique n'est exécutée sans la validation d'un opérateur humain.`,
  f:[`IDS/IPS : détection et prévention d'intrusions`,`IA locale : Ollama (LLaMA 3.1, Mistral), vos données restent chez vous`,`Validation humaine : obligatoire avant toute action critique`,`Auto-apprentissage : à partir des retours des opérateurs`],
@@ -266,7 +267,7 @@ const P=[
 {n:'AGATA-Morph v3.0',c:'#ff6ba0',s:'Sur devis',t:`Chiffrement GCM, bio-séquençage et sentinelle`,
  d:`Système de chiffrement authentifié et de surveillance en temps réel, avec sentinelle IA et alertes d'urgence.`,
  f:[`Chiffrement GCM : AES-256 authentifié pour sceller les séquences`,`Watermark ADN : signature unique et traçable`,`Défense et stase : température de bio-stase, taux d'ATP`,`Protocole Cendres : alertes Telegram en cas de dépassement`,`Cortex Gemini : interroger la sentinelle et analyser l'état`,`Forgeur : export FASTA chiffré avec métadonnées (watermark, IV)`],
- k:['AES-256-GCM','FASTA','Telegram','Gemini']},
+ k:['AES-256-GCM','FASTA','Telegram','AgAtA-IA']},
 {n:'AGATA-SCA',c:'#e6c15a',s:'Sur devis',t:`Savoir ce que contiennent vos logiciels`,
  d:`Analyse les composants de vos applications et leur chaîne d'approvisionnement pour montrer quelles failles vous exposent vraiment.`,
  f:[`Inventaire : dépendances et vulnérabilités`,`Atteignabilité : seules les failles exploitables passent en priorité`,`Chaîne logicielle : visibilité complète`],
